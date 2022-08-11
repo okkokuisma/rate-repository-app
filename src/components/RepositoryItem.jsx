@@ -1,11 +1,13 @@
-import { View, StyleSheet, Image } from 'react-native';
+import { Pressable, View, StyleSheet, Image } from 'react-native';
+import * as Linking from 'expo-linking';
+
 import Text from './Text';
 import theme from '../theme';
 import RepositoryStat from './RepositoryStat';
 
 const styles = StyleSheet.create({
   container: {
-    height: 180
+    backgroundColor: 'white'
   },
   imageContainer: {
     marginLeft: 15,
@@ -27,7 +29,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start'
   },
   statContainer: {
-    marginTop: 15,
+    marginVertical: 15,
     flexDirection: 'row',
     justifyContent: 'space-around',
     flexWrap: 'wrap'
@@ -36,13 +38,26 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
     padding: 5,
     borderRadius: 10
+  },
+  linkButton: {
+    marginHorizontal: 15,
+    marginBottom: 15,
+    height: 50,
+    borderRadius: 5,
+    backgroundColor: theme.colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
 
 
-const RepositoryItem = ({ item }) => {
+const RepositoryItem = ({ item, linkButton }) => {
+  const handleLinkPress = (url) => {
+    Linking.openURL(url);
+  }
+
   return (
-    <View style={ styles.container }>
+    <View testID="repositoryItem" style={ styles.container }>
       <View style={{ flexDirection: 'row' }}>
         <View style={ styles.imageContainer }>
           <Image
@@ -64,6 +79,15 @@ const RepositoryItem = ({ item }) => {
         <RepositoryStat stat={item.reviewCount} title={'Reviews'} />
         <RepositoryStat stat={item.ratingAverage} title={'Rating'} />
       </View>
+      {linkButton
+        ?
+        <View>
+          <Pressable style={styles.linkButton} onPress={() => handleLinkPress(item.url)}>
+            <Text fontWeight={'bold'} color={'secondary'}>Open in GitHub</Text>
+          </Pressable>
+        </View>
+        : null
+      }
     </View>
   );
 };

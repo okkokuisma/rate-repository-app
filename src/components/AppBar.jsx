@@ -1,11 +1,10 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
-import { useQuery } from '@apollo/client';
 
 import AppBarTab from './AppBarTab';
 import AppBarButton from './AppBarButton';
-import { GET_CURRENT_USER } from '../graphql/queries';
 import useAuth from '../hooks/useAuth';
+import useCurrentUser from '../hooks/useCurrentUser';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,20 +18,26 @@ const styles = StyleSheet.create({
 
 const AppBar = () => {
   const [ , signOut ] = useAuth();
-  const { data, loading } = useQuery(GET_CURRENT_USER, {
-    fetchPolicy: 'cache-and-network'
-  });
-  console.log(signOut.toString())
+  const { data, loading } = useCurrentUser(false);
 
-  if (loading) return null
+  if (loading) return null;
 
   return (
     <View style={styles.container}>
       <ScrollView horizontal>
         <AppBarTab title={'Repositories'} url={'/'} />
         {data?.me
-          ? <AppBarButton title='Sign out' handlePress={signOut} />
-          : <AppBarTab title={'Sign in'} url={'/signin'} />
+          ?
+          <>
+            <AppBarTab title={'Create a review'} url={'/review'} />
+            <AppBarTab title={'My reviews'} url={'/user'} />
+            <AppBarButton title='Sign out' handlePress={signOut} />
+          </>
+          :
+          <>
+            <AppBarTab title={'Sign in'} url={'/signin'} />
+            <AppBarTab title={'Sign up'} url={'/signup'} />
+          </>
         }
       </ScrollView>
     </View>

@@ -34,6 +34,10 @@ const SignIn = () => {
     }
   }
 
+  return <SignInContainer onSubmit={onSubmit} />
+};
+
+export const SignInContainer = ({ onSubmit }) => {
   return (
     <>
       <Formik
@@ -47,6 +51,6 @@ const SignIn = () => {
       </Formik>
     </>
   )
-};
+}
 
 export default SignIn;
